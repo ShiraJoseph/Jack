@@ -1,7 +1,7 @@
-package com.github.shirajoseph.jack.services
+package org.intellij.sdk.language.services
 
 import com.intellij.openapi.project.Project
-import com.github.shirajoseph.jack.MyBundle
+import org.intellij.sdk.language.MyBundle
 
 class MyProjectService(project: Project) {
 

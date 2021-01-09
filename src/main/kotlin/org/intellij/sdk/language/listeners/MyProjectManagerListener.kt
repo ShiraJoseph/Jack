@@ -1,9 +1,9 @@
-package com.github.shirajoseph.jack.listeners
+package org.intellij.sdk.language.listeners
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
-import com.github.shirajoseph.jack.services.MyProjectService
+import org.intellij.sdk.language.services.MyProjectService
 
 internal class MyProjectManagerListener : ProjectManagerListener {
 

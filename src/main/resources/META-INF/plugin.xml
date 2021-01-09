@@ -8,12 +8,15 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.shirajoseph.jack.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.shirajoseph.jack.services.MyProjectService"/>
+        <applicationService serviceImplementation="org.intellij.sdk.language.services.MyApplicationService"/>
+        <projectService serviceImplementation="org.intellij.sdk.language.services.MyProjectService"/>
+        <fileType name="Jack File" implementationClass="org.intellij.sdk.language.JackFileType"
+                      fieldName="INSTANCE" language="Jack" extensions="jack"/>
+        <lang.parserDefinition language="Jack" implementationClass="org.intellij.sdk.language.JackParserDefinition"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.shirajoseph.jack.listeners.MyProjectManagerListener"
+        <listener class="org.intellij.sdk.language.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 </idea-plugin>

@@ -1,4 +1,4 @@
-package com.github.shirajoseph.jack
+package org.intellij.sdk.language
 
 import com.intellij.AbstractBundle
 import org.jetbrains.annotations.NonNls

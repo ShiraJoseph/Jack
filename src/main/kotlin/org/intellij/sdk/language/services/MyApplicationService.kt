@@ -1,6 +1,6 @@
-package com.github.shirajoseph.jack.services
+package org.intellij.sdk.language.services
 
-import com.github.shirajoseph.jack.MyBundle
+import org.intellij.sdk.language.MyBundle
 
 class MyApplicationService {
 
