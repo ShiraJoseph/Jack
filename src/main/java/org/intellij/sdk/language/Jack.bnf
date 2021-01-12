@@ -1,18 +1,66 @@
 {
-  parserUtilClass="org.intellij.sdk.language.parser.JackParserUtil"
 	parserClass="org.intellij.sdk.language.parser.JackParser"
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  parserUtilClass="org.intellij.sdk.language.parser.JackParserUtil"
+	extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
 	psiClassPrefix="Jack"
 	psiImplClassSuffix="Impl"
 	psiPackage="org.intellij.sdk.language.psi"
 	psiImplPackage="org.intellij.sdk.language.psi.impl"
+
 	elementTypeHolderClass="org.intellij.sdk.language.psi.JackTypes"
 	elementTypeClass="org.intellij.sdk.language.psi.JackElementType"
 	tokenTypeClass="org.intellij.sdk.language.psi.JackTokenType"
-}
 
+  psiImplUtilClass="org.intellij.sdk.language.psi.impl.JackPsiImplUtil"
+}
 jackFile ::= item_*
 
 private item_ ::= (property|COMMENT|CRLF)
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY
+property ::= (KEY? SEPARATOR VALUE?) | KEY {
+  pin=3
+  recoverWhile="recover_property"
+  mixin="org.intellij.sdk.language.psi.impl.JackNamedElementImpl"
+  implements="org.intellij.sdk.language.psi.JackNamedElement"
+  methods=[getKey getValue getName setName getNameIdentifier getPresentation]
+}
+
+private recover_property ::= !(KEY|SEPARATOR|COMMENT)
+
+
+code ::= (nonCode* class_block? noncode*) {
+	mixin="org.intellij.sdk.language.psi.impl.JackNamedElementImpl"
+	implements="org.intellij.sdk.language.psi.JackNamedElement"
+}
+
+nonCode ::= (COMMENT|CRLF)
+class_block ::= (CLASS_KEYWORD user_class_type OPEN_BRACE declaration* routine* constructor? routine* CLOSE_BRACE )
+routine ::= (constructor|method|function)
+declaration ::= (VAR_KEYWORD type IDENTIFIER (LIST_SEPARATOR KEY)* STATEMENT_TERMINATOR)
+statement ::= (assignment|control_flow)
+return_statement ::= (RETURN_KEYWORD (KEY|VALUE|routine_call)? STATEMENT_TERMINATOR)
+constructor ::= (CONSTRUCTOR_KEYWORD user_class_type NEW_KEYWORD parameters OPEN_BRACE routine_block RETURN_KEYWORD THIS_KEYWORD STATEMENT_TERMINATOR CLOSE_BRACE)
+method ::= (METHOD_KEYWORD type parameters OPEN_BRACE routine_block return_statement CLOSE_BRACE)
+function ::= (FUNCTION_KEYWORD type parameters OPEN_BRACE routine_block return_statement CLOSE_BRACE)
+parameter ::= (type IDENTIFIER)
+parameters ::= (OPEN_PARENTHESIS (parameter (LIST_SEPARATOR parameter)*)? CLOSE_PARENTHESIS)
+comparison ::= (KEY|VALUE comparison_operator KEY|VALUE)| (OPEN_PARENTHESIS comparison CLOSE_PARENTHESIS)|boolean|(OPEN_PARENTHESIS boolean CLOSE_PARENTHESIS)
+boolean ::= (KEY|TRUE_KEYWORD|FALSE_KEYWORD|(NOT_OPERATOR condition)|routine_call)
+condition ::= (comparison ((AND_OPERATOR|OR_OPERATOR) condition)*)
+routine_block ::= (declaration* statement*)
+routine_name ::= IDENTIFIER
+code_block ::= (OPEN_BRACE statement* CLOSE_BRACE)
+control_flow ::= (if_flow|while_flow)
+if_flow ::= (IF_KEYWORD OPEN_PARENTHESIS condition CLOSE_PARENTHESIS code_block (ELSE_KEYWORD code_block)?)
+while_flow ::= (WHILE_KEYWORD OPEN_PARENTHESIS condition CLOSE_PARENTHESIS code_block)
+routine_call_statement ::= (DO_KEYWORD routine_call STATEMENT_TERMINATOR)
+routine_call ::= ((KEY|object_type) CLASS_MEMBERSHIP routine_name OPEN_PARENTHESIS (KEY|VALUE|routine_call)* CLOSE_PARENTHESIS)
+type ::= (primitive_type|object_type)
+primitive_type ::= (int|boolean|char|void)
+object_type ::= (OS_class_type|user_class_type)
+OS_class_type ::= (STRING_CLASS|MEMORY_CLASS|OUTPUT_CLASS|SYS_CLASS|KEYBOARD_CLASS|ARRAY_CLASS|MATH_CLASS|SCREEN_CLASS)
+assignment ::= (LET_KEYWORD KEY ASSIGNMENT_OPERATOR (VALUE|KEY|routine_call) STATEMENT_TERMINATOR)
+operator ::= PLUS_OPERATOR|MINUS_OPERATOR|TIMES_OPERATOR|DIVIDE_OPERATOR
+comparison_operator ::= EQUALS_OPERATOR|LESS_THAN_OPERATOR|MORE_THAN_OPERATOR
+user_class_type ::= IDENTIFIER

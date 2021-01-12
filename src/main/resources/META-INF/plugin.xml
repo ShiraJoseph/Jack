@@ -6,13 +6,31 @@
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
-
+    <depends>com.intellij.modules.java</depends>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="org.intellij.sdk.language.services.MyApplicationService"/>
         <projectService serviceImplementation="org.intellij.sdk.language.services.MyProjectService"/>
         <fileType name="Jack File" implementationClass="org.intellij.sdk.language.JackFileType"
-                      fieldName="INSTANCE" language="Jack" extensions="jack"/>
+                  fieldName="INSTANCE" language="Jack" extensions="jack"/>
         <lang.parserDefinition language="Jack" implementationClass="org.intellij.sdk.language.JackParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Jack"
+                                       implementationClass="org.intellij.sdk.language.JackSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="org.intellij.sdk.language.JackColorSettingsPage"/>
+        <annotator language="JAVA" implementationClass="org.intellij.sdk.language.JackAnnotator"/>
+        <psi.referenceContributor implementation="org.intellij.sdk.language.JackReferenceContributor"/>
+        <lang.refactoringSupport language="Jack"
+                                 implementationClass="org.intellij.sdk.language.JackRefactoringSupportProvider"/>
+        <completion.contributor language="Jack"
+                                implementationClass="org.intellij.sdk.language.JackCompletionContributor"/>
+        <lang.findUsagesProvider language="Jack"
+                                 implementationClass="org.intellij.sdk.language.JackFindUsagesProvider"/>
+        <lang.foldingBuilder language="JAVA" implementationClass="org.intellij.sdk.language.JackFoldingBuilder"/>
+        <gotoSymbolContributor implementation="org.intellij.sdk.language.JackChooseByNameContributor"/>
+        <lang.psiStructureViewFactory language="Jack"
+                                      implementationClass="org.intellij.sdk.language.JackStructureViewFactory"/>
+        <lang.formatter language="Jack" implementationClass="org.intellij.sdk.language.JackFormattingModelBuilder"/>
+        <codeStyleSettingsProvider implementation="org.intellij.sdk.language.JackCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider implementation="org.intellij.sdk.language.JackLanguageCodeStyleSettingsProvider"/>
     </extensions>
 
     <applicationListeners>
